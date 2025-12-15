@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Wochentraining – Satz-Tracker</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/icon-180.png">
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#121a33;
+      --border:rgba(255,255,255,0.08);
+      --muted:rgba(255,255,255,0.75);
+      --btn:rgba(255,255,255,0.08);
+    }
+    body{
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background:var(--bg);
+      color:#fff;
+      margin:0;
+      padding:18px;
+    }
+    .container{
+      max-width:980px;
+      margin:0 auto;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    }
+    h1{ margin:0; font-size:22px; }
+    .sub{ margin-top:6px; color:var(--muted); }
+    .toprow{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(255,255,255,0.04);
+      color:#fff;
+      font-size:13px;
+      white-space:nowrap;
+    }
+    .summary{
+      margin-top:14px;
+      font-size:16px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns:170px 1fr 120px;
+      gap:12px;
+      align-items:center;
+      padding:10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .label{
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .bar-wrap{
+      position:relative;
+      height:34px;
+      background:rgba(255,255,255,0.06);
+      border-radius:10px;
+      overflow:hidden;
+    }
+    .bar{
+      height:100%;
+      border-radius:10px;
+      transition: width 120ms ease;
+    }
+    .bar-text{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      padding-left:10px;
+      gap:10px;
+      font-size:14px;
+    }
+    .controls{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+    }
+    button{
+      border:1px solid rgba(255,255,255,0.12);
+      background:var(--btn);
+      color:#fff;
+      cursor:pointer;
+      border-radius:10px;
+      padding:10px 12px;
+    }
+    .btn-mini{
+      width:52px;
+      height:38px;
+      padding:0;
+      font-size:18px;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .danger{
+      background:#7f1d1d;
+    }
+    .primary{
+      background:#2563eb;
+    }
+    .ghost{
+      background:rgba(255,255,255,0.06);
+    }
+    .section{
+      margin-top:18px;
+    }
+    h2{
+      margin:0 0 10px 0;
+      font-size:18px;
+    }
+    .archive-grid{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+    .small{
+      font-size:13px;
+      color:var(--muted);
+    }
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:50;
+    }
+    .modal{
+      width:min(820px, 100%);
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    .modal-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .modal table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+    }
+    .modal th,.modal td{
+      text-align:left;
+      padding:10px 8px;
+      border-bottom:1px solid rgba(255,255,255,0.07);
+      font-size:14px;
+    }
+    .kpi{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .kpi .pill b{ font-size:14px; }
+    @media (max-width: 720px){
+      body{ padding:12px; }
+      .row{ grid-template-columns: 1fr; }
+      .controls{ justify-content:flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="toprow">
+      <div>
+        <h1>🏋️ Wochentraining – Satz-Tracker</h1>
+        <div class="sub" id="weekLine"></div>
+        <div class="kpi">
+          <span class="pill">🎯 Ziel: <b>20</b> Sätze</span>
+          <span class="pill">🟡 ab <b>10</b> Sätzen</span>
+          <span class="pill">💾 Speichert automatisch</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="ghost" id="btnExport">Export</button>
+        <button class="ghost" id="btnImport">Import</button>
+        <button class="danger" id="btnResetWeek">Woche reset</button>
+      </div>
+    </div>
+
+    <div class="summary" id="summary"></div>
+    <div id="rows"></div>
+
+    <div class="section">
+      <h2>Archiv (Kalenderwochen)</h2>
+      <div class="archive-grid" id="archiveGrid"></div>
+      <div class="small" style="margin-top:10px;">
+        Hinweis: Der Wochenwechsel (Mo 00:00) wird beim nächsten Öffnen der App erkannt und die alte Woche automatisch archiviert.
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-head">
+        <div>
+          <h2 style="margin:0;" id="modalTitle">Archiv</h2>
+          <div class="small" id="modalSub"></div>
+        </div>
+        <button class="ghost" id="modalClose">Schließen</button>
+      </div>
+      <div class="kpi" id="modalKpis"></div>
+      <table>
+        <thead>
+          <tr><th>Muskelgruppe</th><th>Sätze</th><th>Status</th></tr>
+        </thead>
+        <tbody id="modalBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+<script>
+  const GROUPS = [
+    { key:"Brust", icon:"🫀" },
+    { key:"Trizeps", icon:"🦾" },
+    { key:"Rücken", icon:"🛡️" },
+    { key:"Bizeps", icon:"💪" },
+    { key:"Beine", icon:"🦵" },
+    { key:"Bauch", icon:"🎯" },
+    { key:"Schultern", icon:"🏋️" }
+  ];
+  const TARGET = 20;
+  const WARN = 10;
+  const STORAGE_KEY = "training-bars.pwa.v2";
+
+  function getISOWeekKey(date = new Date()) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7; // Mon=1..Sun=7
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum); // nearest Thursday
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    const yyyy = d.getUTCFullYear();
+    const ww = String(weekNo).padStart(2, "0");
+    return `${yyyy}-W${ww}`;
+  }
+
+  function emptyWeekSets() {
+    const obj = {};
+    GROUPS.forEach(g => obj[g.key] = 0);
+    return obj;
+  }
+
+  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+  function colorFor(v){
+    if (v >= TARGET) return "#16a34a";
+    if (v >= WARN) return "#eab308";
+    return "#dc2626";
+  }
+
+  function statusFor(v){
+    if (v >= TARGET) return "🟢 Ziel erreicht";
+    if (v >= WARN) return "🟡 auf Kurs";
+    return "🔴 zu wenig";
+  }
+
+  function loadState(){
+    const currentWeekKey = getISOWeekKey();
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const fresh = { activeWeekKey: currentWeekKey, active: emptyWeekSets(), archive: {} };
+
+    if (!raw) return fresh;
+    let st;
+    try { st = JSON.parse(raw); } catch { return fresh; }
+    st.archive = st.archive || {};
+    st.active = st.active || emptyWeekSets();
+
+    // Ensure keys exist
+    GROUPS.forEach(g => { if (st.active[g.key] == null) st.active[g.key] = 0; });
+
+    // Rollover if week changed
+    if (st.activeWeekKey !== currentWeekKey) {
+      const hasAny = Object.values(st.active).some(v => v > 0);
+      if (hasAny) {
+        st.archive[st.activeWeekKey] = {
+          setsByGroup: st.active,
+          archivedAt: new Date().toISOString()
+        };
+      }
+      st.activeWeekKey = currentWeekKey;
+      st.active = emptyWeekSets();
+    }
+    return st;
+  }
+
+  function saveState(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  let state = loadState();
+  saveState();
+
+  // UI refs
+  const weekLine = document.getElementById("weekLine");
+  const summary = document.getElementById("summary");
+  const rows = document.getElementById("rows");
+  const archiveGrid = document.getElementById("archiveGrid");
+
+  // Modal refs
+  const modalBackdrop = document.getElementById("modalBackdrop");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalSub = document.getElementById("modalSub");
+  const modalBody = document.getElementById("modalBody");
+  const modalKpis = document.getElementById("modalKpis");
+  document.getElementById("modalClose").onclick = () => closeModal();
+  modalBackdrop.addEventListener("click", (e) => { if (e.target === modalBackdrop) closeModal(); });
+
+  function closeModal(){
+    modalBackdrop.style.display = "none";
+  }
+
+  function openModalForWeek(weekKey, entry){
+    modalTitle.textContent = `Archiv: ${weekKey}`;
+    modalSub.textContent = `archiviert am: ${new Date(entry.archivedAt).toLocaleString()}`;
+
+    const sets = entry.setsByGroup || {};
+    const achieved = GROUPS.reduce((acc,g) => acc + ((sets[g.key]||0) >= TARGET ? 1 : 0), 0);
+    const totalSets = GROUPS.reduce((acc,g) => acc + (sets[g.key]||0), 0);
+
+    modalKpis.innerHTML = `
+      <span class="pill">✅ Ziele erreicht: <b>${achieved}/${GROUPS.length}</b></span>
+      <span class="pill">📦 Gesamtsätze: <b>${totalSets}</b></span>
+    `;
+
+    modalBody.innerHTML = "";
+    GROUPS.forEach(g => {
+      const v = sets[g.key] || 0;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${g.icon} ${g.key}</td>
+        <td><b>${v}</b></td>
+        <td>${statusFor(v)}</td>
+      `;
+      modalBody.appendChild(tr);
+    });
+
+    modalBackdrop.style.display = "flex";
+  }
+
+  function achievedCount(setsObj){
+    return GROUPS.reduce((acc,g) => acc + ((setsObj[g.key]||0) >= TARGET ? 1 : 0), 0);
+  }
+
+  function maxForScale(){
+    const max = Math.max(TARGET, ...GROUPS.map(g => state.active[g.key] || 0));
+    return Math.max(TARGET, Math.ceil(max/5)*5);
+  }
+
+  function render(){
+    weekLine.textContent = `Aktive Woche: ${state.activeWeekKey} (Mo–So, ISO-KW)`;
+
+    const achieved = achievedCount(state.active);
+    summary.innerHTML = `Ziel erreicht: <b>${achieved} / ${GROUPS.length}</b> Muskelgruppen bei ≥ ${TARGET} Sätzen`;
+
+    // Bars
+    rows.innerHTML = "";
+    const scaleMax = maxForScale();
+    GROUPS.forEach(g => {
+      const v = state.active[g.key] || 0;
+      const widthPct = Math.min(100, (v / scaleMax) * 100);
+      const row = document.createElement("div");
+      row.className = "row";
+      row.innerHTML = `
+        <div class="label"><span style="font-size:18px;">${g.icon}</span>${g.key}</div>
+        <div class="bar-wrap">
+          <div class="bar" style="width:${widthPct}%; background:${colorFor(v)}"></div>
+          <div class="bar-text"><span><b>${v}</b> Sätze</span> <span style="opacity:.75;">${v>=TARGET?"(grün)":" "}</span></div>
+        </div>
+        <div class="controls">
+          <button class="btn-mini" data-action="minus">−</button>
+          <button class="btn-mini primary" data-action="plus">+</button>
+        </div>
+      `;
+      const minus = row.querySelector('[data-action="minus"]');
+      const plus = row.querySelector('[data-action="plus"]');
+      minus.onclick = () => { state.active[g.key] = clamp(v - 1, 0, 999); saveState(); render(); };
+      plus.onclick = () => { state.active[g.key] = clamp(v + 1, 0, 999); saveState(); render(); };
+      rows.appendChild(row);
+    });
+
+    // Archive buttons
+    const keys = Object.keys(state.archive || {}).sort().reverse();
+    archiveGrid.innerHTML = "";
+    if (keys.length === 0) {
+      archiveGrid.innerHTML = `<span class="small">Noch keine archivierten Wochen.</span>`;
+    } else {
+      keys.forEach(k => {
+        const entry = state.archive[k];
+        const a = achievedCount(entry.setsByGroup || {});
+        const btn = document.createElement("button");
+        btn.className = "ghost";
+        btn.textContent = `${k} • ${a}/${GROUPS.length} Ziele`;
+        btn.onclick = () => openModalForWeek(k, entry);
+        archiveGrid.appendChild(btn);
+      });
+    }
+  }
+
+  // Controls
+  document.getElementById("btnResetWeek").onclick = () => {
+    if (!confirm("Aktuelle Woche wirklich auf 0 setzen?")) return;
+    state.active = emptyWeekSets();
+    saveState();
+    render();
+  };
+
+  // Export / Import
+  document.getElementById("btnExport").onclick = async () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const fileName = `training-bars-export-${state.activeWeekKey}.json`;
+
+    // Try modern save
+    if (window.showSaveFilePicker) {
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: fileName,
+          types: [{ description: "JSON", accept: { "application/json": [".json"] } }]
+        });
+        const writable = await handle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+        alert("Export gespeichert.");
+        return;
+      } catch (e) { /* fall back */ }
+    }
+
+    // Fallback: download link
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  document.getElementById("btnImport").onclick = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "application/json";
+    input.onchange = async () => {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const text = await file.text();
+      try {
+        const imported = JSON.parse(text);
+        if (!imported || typeof imported !== "object") throw new Error("Invalid");
+        // Merge safely
+        state.archive = imported.archive || state.archive || {};
+        // If imported has activeWeekKey/active, take it, then rollover check will fix if needed
+        if (imported.activeWeekKey) state.activeWeekKey = imported.activeWeekKey;
+        if (imported.active) state.active = imported.active;
+        // Ensure keys
+        GROUPS.forEach(g => { if (state.active[g.key] == null) state.active[g.key] = 0; });
+        // Rollover check
+        const currentWeekKey = getISOWeekKey();
+        if (state.activeWeekKey !== currentWeekKey) {
+          const hasAny = Object.values(state.active).some(v => v > 0);
+          if (hasAny) state.archive[state.activeWeekKey] = { setsByGroup: state.active, archivedAt: new Date().toISOString() };
+          state.activeWeekKey = currentWeekKey;
+          state.active = emptyWeekSets();
+        }
+        saveState(); render();
+        alert("Import OK.");
+      } catch (e) {
+        alert("Import fehlgeschlagen. (Bitte eine gültige Export-Datei wählen.)");
+      }
+    };
+    input.click();
+  };
+
+  // Register service worker (works only when hosted via HTTPS)
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    });
+  }
+
+  render();
+</script>
+</body>
+</html>
