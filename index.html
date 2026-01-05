@@ -17,12 +17,18 @@
       --muted:rgba(255,255,255,0.75);
       --btn:rgba(255,255,255,0.08);
     }
+    *{ box-sizing:border-box; }
     body{
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background:var(--bg);
       color:#fff;
       margin:0;
       padding:18px;
+      -webkit-text-size-adjust: 100%;
+    }
+    button, .btn-mini, .ghost, .danger, .primary, .pill {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     .container{
       max-width:980px;
@@ -54,13 +60,10 @@
       font-size:13px;
       white-space:nowrap;
     }
-    .summary{
-      margin-top:14px;
-      font-size:16px;
-    }
+    .summary{ margin-top:14px; font-size:16px; }
     .row{
       display:grid;
-      grid-template-columns:170px 1fr 120px;
+      grid-template-columns:210px 1fr 120px;
       gap:12px;
       align-items:center;
       padding:10px 0;
@@ -71,6 +74,24 @@
       display:flex;
       align-items:center;
       gap:8px;
+      flex-wrap:wrap;
+    }
+    .label .name{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .streak-chip{
+      display:inline-flex;
+      gap:6px;
+      align-items:center;
+      padding:4px 8px;
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:999px;
+      background:rgba(255,255,255,0.06);
+      font-size:12px;
+      font-weight:700;
+      opacity:0.95;
     }
     .bar-wrap{
       position:relative;
@@ -79,11 +100,7 @@
       border-radius:10px;
       overflow:hidden;
     }
-    .bar{
-      height:100%;
-      border-radius:10px;
-      transition: width 120ms ease;
-    }
+    .bar{ height:100%; border-radius:10px; transition: width 120ms ease; }
     .bar-text{
       position:absolute;
       inset:0;
@@ -105,6 +122,8 @@
       cursor:pointer;
       border-radius:10px;
       padding:10px 12px;
+      user-select: none;
+      -webkit-user-select: none;
     }
     .btn-mini{
       width:52px;
@@ -116,31 +135,13 @@
       align-items:center;
       justify-content:center;
     }
-    .danger{
-      background:#7f1d1d;
-    }
-    .primary{
-      background:#2563eb;
-    }
-    .ghost{
-      background:rgba(255,255,255,0.06);
-    }
-    .section{
-      margin-top:18px;
-    }
-    h2{
-      margin:0 0 10px 0;
-      font-size:18px;
-    }
-    .archive-grid{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-    .small{
-      font-size:13px;
-      color:var(--muted);
-    }
+    .danger{ background:#7f1d1d; }
+    .primary{ background:#2563eb; }
+    .ghost{ background:rgba(255,255,255,0.06); }
+    .section{ margin-top:18px; }
+    h2{ margin:0 0 10px 0; font-size:18px; }
+    .archive-grid{ display:flex; flex-wrap:wrap; gap:10px; }
+    .small{ font-size:13px; color:var(--muted); }
     .modal-backdrop{
       position:fixed;
       inset:0;
@@ -183,6 +184,12 @@
       margin-top:10px;
     }
     .kpi .pill b{ font-size:14px; }
+    .badgeRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
+    }
     @media (max-width: 720px){
       body{ padding:12px; }
       .row{ grid-template-columns: 1fr; }
@@ -196,12 +203,16 @@
       <div>
         <h1>🏋️ Wochentraining – Satz-Tracker</h1>
         <div class="sub" id="weekLine"></div>
+
         <div class="kpi">
-          <span class="pill">🎯 Ziel: <b>20</b> Sätze</span>
           <span class="pill">🟡 ab <b>10</b> Sätzen</span>
+          <span class="pill">🟢 ab <b>20</b> Sätzen</span>
           <span class="pill">💾 Speichert automatisch</span>
         </div>
+
+        <div class="badgeRow" id="badgeRow"></div>
       </div>
+
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button class="ghost" id="btnExport">Export</button>
         <button class="ghost" id="btnImport">Import</button>
@@ -221,7 +232,6 @@
     </div>
   </div>
 
-  <!-- Modal -->
   <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true">
     <div class="modal">
       <div class="modal-head">
@@ -242,6 +252,15 @@
   </div>
 
 <script>
+  (function(){
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) event.preventDefault();
+      lastTouchEnd = now;
+    }, { passive: false });
+  })();
+
   const GROUPS = [
     { key:"Brust", icon:"🫀" },
     { key:"Trizeps", icon:"🦾" },
@@ -253,12 +272,12 @@
   ];
   const TARGET = 20;
   const WARN = 10;
-  const STORAGE_KEY = "training-bars.pwa.v2";
+  const STORAGE_KEY = "training-bars.pwa.v5";
 
   function getISOWeekKey(date = new Date()) {
     const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    const dayNum = d.getUTCDay() || 7; // Mon=1..Sun=7
-    d.setUTCDate(d.getUTCDate() + 4 - dayNum); // nearest Thursday
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
     const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
     const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
     const yyyy = d.getUTCFullYear();
@@ -286,6 +305,13 @@
     return "🔴 zu wenig";
   }
 
+  function weekBadges(sets){
+    const vals = GROUPS.map(g => (sets?.[g.key] ?? 0));
+    const all10 = vals.every(v => v >= WARN);
+    const all20 = vals.every(v => v >= TARGET);
+    return { all10, all20 };
+  }
+
   function loadState(){
     const currentWeekKey = getISOWeekKey();
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -296,11 +322,8 @@
     try { st = JSON.parse(raw); } catch { return fresh; }
     st.archive = st.archive || {};
     st.active = st.active || emptyWeekSets();
-
-    // Ensure keys exist
     GROUPS.forEach(g => { if (st.active[g.key] == null) st.active[g.key] = 0; });
 
-    // Rollover if week changed
     if (st.activeWeekKey !== currentWeekKey) {
       const hasAny = Object.values(st.active).some(v => v > 0);
       if (hasAny) {
@@ -315,20 +338,17 @@
     return st;
   }
 
-  function saveState(){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }
+  function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
   let state = loadState();
   saveState();
 
-  // UI refs
   const weekLine = document.getElementById("weekLine");
   const summary = document.getElementById("summary");
   const rows = document.getElementById("rows");
   const archiveGrid = document.getElementById("archiveGrid");
+  const badgeRow = document.getElementById("badgeRow");
 
-  // Modal refs
   const modalBackdrop = document.getElementById("modalBackdrop");
   const modalTitle = document.getElementById("modalTitle");
   const modalSub = document.getElementById("modalSub");
@@ -336,9 +356,61 @@
   const modalKpis = document.getElementById("modalKpis");
   document.getElementById("modalClose").onclick = () => closeModal();
   modalBackdrop.addEventListener("click", (e) => { if (e.target === modalBackdrop) closeModal(); });
+  function closeModal(){ modalBackdrop.style.display = "none"; }
 
-  function closeModal(){
-    modalBackdrop.style.display = "none";
+  function achievedCount20(setsObj){
+    return GROUPS.reduce((acc,g) => acc + ((setsObj[g.key]||0) >= TARGET ? 1 : 0), 0);
+  }
+
+  function maxForScale(){
+    const max = Math.max(TARGET, ...GROUPS.map(g => state.active[g.key] || 0));
+    return Math.max(TARGET, Math.ceil(max/5)*5);
+  }
+
+  function computeGlobalStreaks() {
+    const entries = [];
+    Object.keys(state.archive || {}).sort().forEach(k => {
+      entries.push({ weekKey: k, sets: (state.archive[k]?.setsByGroup || {}) });
+    });
+    entries.push({ weekKey: state.activeWeekKey, sets: state.active });
+
+    let silverStreak = 0;
+    for (let i = entries.length - 1; i >= 0; i--) {
+      const b = weekBadges(entries[i].sets);
+      if (b.all10) silverStreak++; else break;
+    }
+
+    let goldStreak = 0;
+    for (let i = entries.length - 1; i >= 0; i--) {
+      const b = weekBadges(entries[i].sets);
+      if (b.all20) goldStreak++; else break;
+    }
+
+    return { silverStreak, goldStreak };
+  }
+
+  function computePerMuscleStreaks() {
+    const entries = [];
+    Object.keys(state.archive || {}).sort().forEach(k => {
+      entries.push({ weekKey: k, sets: (state.archive[k]?.setsByGroup || {}) });
+    });
+    entries.push({ weekKey: state.activeWeekKey, sets: state.active });
+
+    const result = {};
+    GROUPS.forEach(g => {
+      let silver = 0;
+      for (let i = entries.length - 1; i >= 0; i--) {
+        const v = (entries[i].sets?.[g.key] ?? 0);
+        if (v >= WARN) silver++; else break;
+      }
+      let gold = 0;
+      for (let i = entries.length - 1; i >= 0; i--) {
+        const v = (entries[i].sets?.[g.key] ?? 0);
+        if (v >= TARGET) gold++; else break;
+      }
+      result[g.key] = { silver, gold };
+    });
+    return result;
   }
 
   function openModalForWeek(weekKey, entry){
@@ -346,12 +418,18 @@
     modalSub.textContent = `archiviert am: ${new Date(entry.archivedAt).toLocaleString()}`;
 
     const sets = entry.setsByGroup || {};
-    const achieved = GROUPS.reduce((acc,g) => acc + ((sets[g.key]||0) >= TARGET ? 1 : 0), 0);
+    const achieved20 = achievedCount20(sets);
     const totalSets = GROUPS.reduce((acc,g) => acc + (sets[g.key]||0), 0);
+    const b = weekBadges(sets);
+
+    const star = b.all20 ? "⭐️ Goldstern" : (b.all10 ? "🌟 Silberstern" : "—");
+    const trophy = b.all20 ? "🏆 Gold-Pokal" : (b.all10 ? "🥈 Silber-Pokal" : "—");
 
     modalKpis.innerHTML = `
-      <span class="pill">✅ Ziele erreicht: <b>${achieved}/${GROUPS.length}</b></span>
+      <span class="pill">✅ Ziele (20): <b>${achieved20}/${GROUPS.length}</b></span>
       <span class="pill">📦 Gesamtsätze: <b>${totalSets}</b></span>
+      <span class="pill">${star}</span>
+      <span class="pill">${trophy}</span>
     `;
 
     modalBody.innerHTML = "";
@@ -369,48 +447,56 @@
     modalBackdrop.style.display = "flex";
   }
 
-  function achievedCount(setsObj){
-    return GROUPS.reduce((acc,g) => acc + ((setsObj[g.key]||0) >= TARGET ? 1 : 0), 0);
-  }
-
-  function maxForScale(){
-    const max = Math.max(TARGET, ...GROUPS.map(g => state.active[g.key] || 0));
-    return Math.max(TARGET, Math.ceil(max/5)*5);
-  }
-
   function render(){
     weekLine.textContent = `Aktive Woche: ${state.activeWeekKey} (Mo–So, ISO-KW)`;
 
-    const achieved = achievedCount(state.active);
-    summary.innerHTML = `Ziel erreicht: <b>${achieved} / ${GROUPS.length}</b> Muskelgruppen bei ≥ ${TARGET} Sätzen`;
+    const achieved20 = achievedCount20(state.active);
+    summary.innerHTML = `Ziel erreicht: <b>${achieved20} / ${GROUPS.length}</b> Muskelgruppen bei ≥ ${TARGET} Sätzen`;
 
-    // Bars
+    const b = weekBadges(state.active);
+    const { silverStreak, goldStreak } = computeGlobalStreaks();
+    const per = computePerMuscleStreaks();
+
+    const starText = b.all20
+      ? "⭐️ Goldstern (alle ≥ 20, zählt auch als Silber)"
+      : (b.all10 ? "🌟 Silberstern (alle ≥ 10)" : "— Kein Stern (noch nicht überall ≥ 10)");
+
+    badgeRow.innerHTML = `
+      <span class="pill">${starText}</span>
+      <span class="pill">🥈 Silber-Pokal-Streak (alle ≥10): <b>${silverStreak}</b></span>
+      <span class="pill">🏆 Gold-Pokal-Streak (alle ≥20): <b>${goldStreak}</b></span>
+    `;
+
     rows.innerHTML = "";
     const scaleMax = maxForScale();
     GROUPS.forEach(g => {
       const v = state.active[g.key] || 0;
       const widthPct = Math.min(100, (v / scaleMax) * 100);
+      const s = per[g.key] || { silver: 0, gold: 0 };
+
       const row = document.createElement("div");
       row.className = "row";
       row.innerHTML = `
-        <div class="label"><span style="font-size:18px;">${g.icon}</span>${g.key}</div>
+        <div class="label">
+          <span class="name"><span style="font-size:18px;">${g.icon}</span>${g.key}</span>
+          <span class="streak-chip" title="Streak je Muskel: Wochen am Stück">
+            🟡<b>${s.silver}</b> 🟢<b>${s.gold}</b>
+          </span>
+        </div>
         <div class="bar-wrap">
           <div class="bar" style="width:${widthPct}%; background:${colorFor(v)}"></div>
-          <div class="bar-text"><span><b>${v}</b> Sätze</span> <span style="opacity:.75;">${v>=TARGET?"(grün)":" "}</span></div>
+          <div class="bar-text"><span><b>${v}</b> Sätze</span></div>
         </div>
         <div class="controls">
           <button class="btn-mini" data-action="minus">−</button>
           <button class="btn-mini primary" data-action="plus">+</button>
         </div>
       `;
-      const minus = row.querySelector('[data-action="minus"]');
-      const plus = row.querySelector('[data-action="plus"]');
-      minus.onclick = () => { state.active[g.key] = clamp(v - 1, 0, 999); saveState(); render(); };
-      plus.onclick = () => { state.active[g.key] = clamp(v + 1, 0, 999); saveState(); render(); };
+      row.querySelector('[data-action="minus"]').onclick = () => { state.active[g.key] = clamp(v - 1, 0, 999); saveState(); render(); };
+      row.querySelector('[data-action="plus"]').onclick = () => { state.active[g.key] = clamp(v + 1, 0, 999); saveState(); render(); };
       rows.appendChild(row);
     });
 
-    // Archive buttons
     const keys = Object.keys(state.archive || {}).sort().reverse();
     archiveGrid.innerHTML = "";
     if (keys.length === 0) {
@@ -418,17 +504,18 @@
     } else {
       keys.forEach(k => {
         const entry = state.archive[k];
-        const a = achievedCount(entry.setsByGroup || {});
+        const wb = weekBadges(entry.setsByGroup || {});
+        const star = wb.all20 ? "⭐️" : (wb.all10 ? "🌟" : "•");
+        const trophy = wb.all20 ? "🏆" : (wb.all10 ? "🥈" : "");
         const btn = document.createElement("button");
         btn.className = "ghost";
-        btn.textContent = `${k} • ${a}/${GROUPS.length} Ziele`;
+        btn.textContent = `${star}${trophy} ${k}`;
         btn.onclick = () => openModalForWeek(k, entry);
         archiveGrid.appendChild(btn);
       });
     }
   }
 
-  // Controls
   document.getElementById("btnResetWeek").onclick = () => {
     if (!confirm("Aktuelle Woche wirklich auf 0 setzen?")) return;
     state.active = emptyWeekSets();
@@ -436,27 +523,9 @@
     render();
   };
 
-  // Export / Import
   document.getElementById("btnExport").onclick = async () => {
     const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
     const fileName = `training-bars-export-${state.activeWeekKey}.json`;
-
-    // Try modern save
-    if (window.showSaveFilePicker) {
-      try {
-        const handle = await window.showSaveFilePicker({
-          suggestedName: fileName,
-          types: [{ description: "JSON", accept: { "application/json": [".json"] } }]
-        });
-        const writable = await handle.createWritable();
-        await writable.write(blob);
-        await writable.close();
-        alert("Export gespeichert.");
-        return;
-      } catch (e) { /* fall back */ }
-    }
-
-    // Fallback: download link
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -478,14 +547,11 @@
       try {
         const imported = JSON.parse(text);
         if (!imported || typeof imported !== "object") throw new Error("Invalid");
-        // Merge safely
         state.archive = imported.archive || state.archive || {};
-        // If imported has activeWeekKey/active, take it, then rollover check will fix if needed
         if (imported.activeWeekKey) state.activeWeekKey = imported.activeWeekKey;
         if (imported.active) state.active = imported.active;
-        // Ensure keys
         GROUPS.forEach(g => { if (state.active[g.key] == null) state.active[g.key] = 0; });
-        // Rollover check
+
         const currentWeekKey = getISOWeekKey();
         if (state.activeWeekKey !== currentWeekKey) {
           const hasAny = Object.values(state.active).some(v => v > 0);
@@ -502,7 +568,6 @@
     input.click();
   };
 
-  // Register service worker (works only when hosted via HTTPS)
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("./sw.js").catch(() => {});
