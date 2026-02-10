@@ -41,100 +41,35 @@
     }
     h1{ margin:0; font-size:22px; }
     .sub{ margin-top:6px; color:var(--muted); }
-    .toprow{
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
+    .toprow{ display:flex; gap:12px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; }
     .pill{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding:8px 10px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      background:rgba(255,255,255,0.04);
-      color:#fff;
-      font-size:13px;
-      white-space:nowrap;
+      display:inline-flex; gap:8px; align-items:center;
+      padding:8px 10px; border:1px solid var(--border);
+      border-radius:999px; background:rgba(255,255,255,0.04);
+      color:#fff; font-size:13px; white-space:nowrap;
     }
     .summary{ margin-top:14px; font-size:16px; }
     .row{
-      display:grid;
-      grid-template-columns:210px 1fr 120px;
-      gap:12px;
-      align-items:center;
-      padding:10px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      display:grid; grid-template-columns:260px 1fr 120px; gap:12px; align-items:center;
+      padding:10px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
     }
-    .label{
-      font-weight:800;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
+    .label{ font-weight:800; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .label .name{ display:flex; align-items:center; gap:8px; }
+    .chip{
+      display:inline-flex; gap:6px; align-items:center; padding:4px 8px;
+      border:1px solid rgba(255,255,255,0.12); border-radius:999px;
+      background:rgba(255,255,255,0.06); font-size:12px; font-weight:800; opacity:0.95;
     }
-    .label .name{
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    .streak-chip{
-      display:inline-flex;
-      gap:6px;
-      align-items:center;
-      padding:4px 8px;
-      border:1px solid rgba(255,255,255,0.12);
-      border-radius:999px;
-      background:rgba(255,255,255,0.06);
-      font-size:12px;
-      font-weight:700;
-      opacity:0.95;
-    }
-    .bar-wrap{
-      position:relative;
-      height:34px;
-      background:rgba(255,255,255,0.06);
-      border-radius:10px;
-      overflow:hidden;
-    }
+    .chip .muted{ opacity:0.85; font-weight:700; }
+    .bar-wrap{ position:relative; height:34px; background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden; }
     .bar{ height:100%; border-radius:10px; transition: width 120ms ease; }
-    .bar-text{
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      padding-left:10px;
-      gap:10px;
-      font-size:14px;
-    }
-    .controls{
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
-    }
+    .bar-text{ position:absolute; inset:0; display:flex; align-items:center; padding-left:10px; gap:10px; font-size:14px; }
+    .controls{ display:flex; gap:10px; justify-content:flex-end; }
     button{
-      border:1px solid rgba(255,255,255,0.12);
-      background:var(--btn);
-      color:#fff;
-      cursor:pointer;
-      border-radius:10px;
-      padding:10px 12px;
-      user-select: none;
-      -webkit-user-select: none;
+      border:1px solid rgba(255,255,255,0.12); background:var(--btn); color:#fff; cursor:pointer;
+      border-radius:10px; padding:10px 12px; user-select:none; -webkit-user-select:none;
     }
-    .btn-mini{
-      width:52px;
-      height:38px;
-      padding:0;
-      font-size:18px;
-      font-weight:900;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+    .btn-mini{ width:52px; height:38px; padding:0; font-size:18px; font-weight:900; display:flex; align-items:center; justify-content:center; }
     .danger{ background:#7f1d1d; }
     .primary{ background:#2563eb; }
     .ghost{ background:rgba(255,255,255,0.06); }
@@ -142,54 +77,15 @@
     h2{ margin:0 0 10px 0; font-size:18px; }
     .archive-grid{ display:flex; flex-wrap:wrap; gap:10px; }
     .small{ font-size:13px; color:var(--muted); }
-    .modal-backdrop{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.55);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-      z-index:50;
-    }
-    .modal{
-      width:min(820px, 100%);
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:14px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-    }
-    .modal-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-    }
-    .modal table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:10px;
-    }
-    .modal th,.modal td{
-      text-align:left;
-      padding:10px 8px;
-      border-bottom:1px solid rgba(255,255,255,0.07);
-      font-size:14px;
-    }
-    .kpi{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-    .kpi .pill b{ font-size:14px; }
-    .badgeRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:10px;
-    }
+    .kpi{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .badgeRow{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+
+    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.55); display:none; align-items:center; justify-content:center; padding:16px; z-index:50; }
+    .modal{ width:min(860px, 100%); background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+    .modal-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+    .modal table{ width:100%; border-collapse:collapse; margin-top:10px; }
+    .modal th,.modal td{ text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,0.07); font-size:14px; }
+
     @media (max-width: 720px){
       body{ padding:12px; }
       .row{ grid-template-columns: 1fr; }
@@ -203,16 +99,9 @@
       <div>
         <h1>🏋️ Wochentraining – Satz-Tracker</h1>
         <div class="sub" id="weekLine"></div>
-
-        <div class="kpi">
-          <span class="pill">🟡 ab <b>10</b> Sätzen</span>
-          <span class="pill">🟢 ab <b>20</b> Sätzen</span>
-          <span class="pill">💾 Speichert automatisch</span>
-        </div>
-
+        <div class="kpi" id="thresholdLegend"></div>
         <div class="badgeRow" id="badgeRow"></div>
       </div>
-
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button class="ghost" id="btnExport">Export</button>
         <button class="ghost" id="btnImport">Import</button>
@@ -244,7 +133,7 @@
       <div class="kpi" id="modalKpis"></div>
       <table>
         <thead>
-          <tr><th>Muskelgruppe</th><th>Sätze</th><th>Status</th></tr>
+          <tr><th>Muskelgruppe</th><th>Sätze</th><th>Zielwerte</th><th>Status</th><th>Streak</th></tr>
         </thead>
         <tbody id="modalBody"></tbody>
       </table>
@@ -261,18 +150,9 @@
     }, { passive: false });
   })();
 
-  const GROUPS = [
-    { key:"Brust", icon:"🫀" },
-    { key:"Trizeps", icon:"🦾" },
-    { key:"Rücken", icon:"🛡️" },
-    { key:"Bizeps", icon:"💪" },
-    { key:"Beine", icon:"🦵" },
-    { key:"Bauch", icon:"🎯" },
-    { key:"Schultern", icon:"🏋️" }
-  ];
-  const TARGET = 20;
-  const WARN = 10;
-  const STORAGE_KEY = "training-bars.pwa.v5";
+  const GROUPS = [{"key": "Brust", "icon": "🫀"}, {"key": "Trizeps", "icon": "🦾"}, {"key": "Rücken", "icon": "🛡️"}, {"key": "Bizeps", "icon": "💪"}, {"key": "Beine", "icon": "🦵"}, {"key": "Bauch", "icon": "🎯"}, {"key": "Schultern", "icon": "🏋️"}];
+  const TH = {"Brust": {"good": 10, "opt": 18}, "Trizeps": {"good": 10, "opt": 18}, "Rücken": {"good": 12, "opt": 20}, "Bizeps": {"good": 8, "opt": 14}, "Beine": {"good": 12, "opt": 22}, "Bauch": {"good": 6, "opt": 12}, "Schultern": {"good": 10, "opt": 18}};
+  const STORAGE_KEY = "training-bars.pwa.v6";
 
   function getISOWeekKey(date = new Date()) {
     const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -285,7 +165,7 @@
     return `${yyyy}-W${ww}`;
   }
 
-  function emptyWeekSets() {
+  function emptyWeekSets(){
     const obj = {};
     GROUPS.forEach(g => obj[g.key] = 0);
     return obj;
@@ -293,23 +173,26 @@
 
   function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
-  function colorFor(v){
-    if (v >= TARGET) return "#16a34a";
-    if (v >= WARN) return "#eab308";
+  function colorFor(groupKey, v){
+    const good = TH[groupKey].good;
+    const opt  = TH[groupKey].opt;
+    if (v >= opt) return "#16a34a";
+    if (v >= good) return "#eab308";
     return "#dc2626";
   }
 
-  function statusFor(v){
-    if (v >= TARGET) return "🟢 Ziel erreicht";
-    if (v >= WARN) return "🟡 auf Kurs";
+  function statusFor(groupKey, v){
+    const good = TH[groupKey].good;
+    const opt  = TH[groupKey].opt;
+    if (v >= opt) return "🟢 optimal";
+    if (v >= good) return "🟡 gut";
     return "🔴 zu wenig";
   }
 
   function weekBadges(sets){
-    const vals = GROUPS.map(g => (sets?.[g.key] ?? 0));
-    const all10 = vals.every(v => v >= WARN);
-    const all20 = vals.every(v => v >= TARGET);
-    return { all10, all20 };
+    const allGood = GROUPS.every(g => (sets?.[g.key] ?? 0) >= TH[g.key].good);
+    const allOpt  = GROUPS.every(g => (sets?.[g.key] ?? 0) >= TH[g.key].opt);
+    return { allGood, allOpt };
   }
 
   function loadState(){
@@ -320,18 +203,14 @@
     if (!raw) return fresh;
     let st;
     try { st = JSON.parse(raw); } catch { return fresh; }
+
     st.archive = st.archive || {};
     st.active = st.active || emptyWeekSets();
     GROUPS.forEach(g => { if (st.active[g.key] == null) st.active[g.key] = 0; });
 
     if (st.activeWeekKey !== currentWeekKey) {
       const hasAny = Object.values(st.active).some(v => v > 0);
-      if (hasAny) {
-        st.archive[st.activeWeekKey] = {
-          setsByGroup: st.active,
-          archivedAt: new Date().toISOString()
-        };
-      }
+      if (hasAny) st.archive[st.activeWeekKey] = { setsByGroup: st.active, archivedAt: new Date().toISOString() };
       st.activeWeekKey = currentWeekKey;
       st.active = emptyWeekSets();
     }
@@ -348,6 +227,7 @@
   const rows = document.getElementById("rows");
   const archiveGrid = document.getElementById("archiveGrid");
   const badgeRow = document.getElementById("badgeRow");
+  const thresholdLegend = document.getElementById("thresholdLegend");
 
   const modalBackdrop = document.getElementById("modalBackdrop");
   const modalTitle = document.getElementById("modalTitle");
@@ -358,57 +238,48 @@
   modalBackdrop.addEventListener("click", (e) => { if (e.target === modalBackdrop) closeModal(); });
   function closeModal(){ modalBackdrop.style.display = "none"; }
 
-  function achievedCount20(setsObj){
-    return GROUPS.reduce((acc,g) => acc + ((setsObj[g.key]||0) >= TARGET ? 1 : 0), 0);
-  }
-
   function maxForScale(){
-    const max = Math.max(TARGET, ...GROUPS.map(g => state.active[g.key] || 0));
-    return Math.max(TARGET, Math.ceil(max/5)*5);
+    const maxVal = Math.max(...GROUPS.map(g => state.active[g.key] || 0), ...GROUPS.map(g => TH[g.key].opt));
+    return Math.max(10, Math.ceil(maxVal/5)*5);
   }
 
-  function computeGlobalStreaks() {
+  function computeGlobalStreaks(){
     const entries = [];
-    Object.keys(state.archive || {}).sort().forEach(k => {
-      entries.push({ weekKey: k, sets: (state.archive[k]?.setsByGroup || {}) });
-    });
+    Object.keys(state.archive || {}).sort().forEach(k => entries.push({ weekKey:k, sets:(state.archive[k]?.setsByGroup || {}) }));
     entries.push({ weekKey: state.activeWeekKey, sets: state.active });
 
-    let silverStreak = 0;
+    let silver = 0;
     for (let i = entries.length - 1; i >= 0; i--) {
-      const b = weekBadges(entries[i].sets);
-      if (b.all10) silverStreak++; else break;
+      if (weekBadges(entries[i].sets).allGood) silver++; else break;
     }
-
-    let goldStreak = 0;
+    let gold = 0;
     for (let i = entries.length - 1; i >= 0; i--) {
-      const b = weekBadges(entries[i].sets);
-      if (b.all20) goldStreak++; else break;
+      if (weekBadges(entries[i].sets).allOpt) gold++; else break;
     }
-
-    return { silverStreak, goldStreak };
+    return { silver, gold };
   }
 
-  function computePerMuscleStreaks() {
+  function computePerMuscleStreaks(){
     const entries = [];
-    Object.keys(state.archive || {}).sort().forEach(k => {
-      entries.push({ weekKey: k, sets: (state.archive[k]?.setsByGroup || {}) });
-    });
+    Object.keys(state.archive || {}).sort().forEach(k => entries.push({ weekKey:k, sets:(state.archive[k]?.setsByGroup || {}) }));
     entries.push({ weekKey: state.activeWeekKey, sets: state.active });
 
     const result = {};
     GROUPS.forEach(g => {
-      let silver = 0;
+      const good = TH[g.key].good;
+      const opt  = TH[g.key].opt;
+
+      let s = 0;
       for (let i = entries.length - 1; i >= 0; i--) {
         const v = (entries[i].sets?.[g.key] ?? 0);
-        if (v >= WARN) silver++; else break;
+        if (v >= good) s++; else break;
       }
-      let gold = 0;
+      let gg = 0;
       for (let i = entries.length - 1; i >= 0; i--) {
         const v = (entries[i].sets?.[g.key] ?? 0);
-        if (v >= TARGET) gold++; else break;
+        if (v >= opt) gg++; else break;
       }
-      result[g.key] = { silver, gold };
+      result[g.key] = { silver:s, gold:gg };
     });
     return result;
   }
@@ -418,19 +289,32 @@
     modalSub.textContent = `archiviert am: ${new Date(entry.archivedAt).toLocaleString()}`;
 
     const sets = entry.setsByGroup || {};
-    const achieved20 = achievedCount20(sets);
-    const totalSets = GROUPS.reduce((acc,g) => acc + (sets[g.key]||0), 0);
     const b = weekBadges(sets);
+    const totalSets = GROUPS.reduce((acc,g) => acc + (sets[g.key]||0), 0);
 
-    const star = b.all20 ? "⭐️ Goldstern" : (b.all10 ? "🌟 Silberstern" : "—");
-    const trophy = b.all20 ? "🏆 Gold-Pokal" : (b.all10 ? "🥈 Silber-Pokal" : "—");
+    const star = b.allOpt ? "⭐️ Goldstern" : (b.allGood ? "🌟 Silberstern" : "—");
+    const trophy = b.allOpt ? "🏆 Gold-Pokal" : (b.allGood ? "🥈 Silber-Pokal" : "—");
 
     modalKpis.innerHTML = `
-      <span class="pill">✅ Ziele (20): <b>${achieved20}/${GROUPS.length}</b></span>
       <span class="pill">📦 Gesamtsätze: <b>${totalSets}</b></span>
       <span class="pill">${star}</span>
       <span class="pill">${trophy}</span>
     `;
+
+    // timeline up to this week
+    const timeline = [];
+    Object.keys(state.archive || {}).sort().forEach(k => timeline.push({ weekKey:k, sets:(state.archive[k]?.setsByGroup || {}) }));
+    const idx = timeline.findIndex(x => x.weekKey === weekKey);
+    const upto = idx >= 0 ? timeline.slice(0, idx+1) : timeline;
+
+    const per = {};
+    GROUPS.forEach(g => {
+      const good = TH[g.key].good;
+      const opt  = TH[g.key].opt;
+      let s = 0; for (let i = upto.length - 1; i >= 0; i--) { const v = (upto[i].sets?.[g.key] ?? 0); if (v >= good) s++; else break; }
+      let gg = 0; for (let i = upto.length - 1; i >= 0; i--) { const v = (upto[i].sets?.[g.key] ?? 0); if (v >= opt) gg++; else break; }
+      per[g.key] = { silver:s, gold:gg };
+    });
 
     modalBody.innerHTML = "";
     GROUPS.forEach(g => {
@@ -439,7 +323,9 @@
       tr.innerHTML = `
         <td>${g.icon} ${g.key}</td>
         <td><b>${v}</b></td>
-        <td>${statusFor(v)}</td>
+        <td><span class="chip"><span class="muted">🟡</span> ${TH[g.key].good} <span class="muted">🟢</span> ${TH[g.key].opt}</span></td>
+        <td>${statusFor(g.key, v)}</td>
+        <td><span class="chip">🟡 <b>${per[g.key].silver}</b> · 🟢 <b>${per[g.key].gold}</b></span></td>
       `;
       modalBody.appendChild(tr);
     });
@@ -450,50 +336,54 @@
   function render(){
     weekLine.textContent = `Aktive Woche: ${state.activeWeekKey} (Mo–So, ISO-KW)`;
 
-    const achieved20 = achievedCount20(state.active);
-    summary.innerHTML = `Ziel erreicht: <b>${achieved20} / ${GROUPS.length}</b> Muskelgruppen bei ≥ ${TARGET} Sätzen`;
+    thresholdLegend.innerHTML = `<span class="pill">Ziele je Muskel: <b>🟡 gut</b> / <b>🟢 optimal</b></span>`
+      + GROUPS.map(g => `<span class="pill">${g.key}: 🟡 <b>${TH[g.key].good}</b> / 🟢 <b>${TH[g.key].opt}</b></span>`).join("");
 
     const b = weekBadges(state.active);
-    const { silverStreak, goldStreak } = computeGlobalStreaks();
+    const { silver, gold } = computeGlobalStreaks();
     const per = computePerMuscleStreaks();
 
-    const starText = b.all20
-      ? "⭐️ Goldstern (alle ≥ 20, zählt auch als Silber)"
-      : (b.all10 ? "🌟 Silberstern (alle ≥ 10)" : "— Kein Stern (noch nicht überall ≥ 10)");
+    const starText = b.allOpt
+      ? "⭐️ Goldstern (alle optimal, zählt auch als Silber)"
+      : (b.allGood ? "🌟 Silberstern (alle gut)" : "— Kein Stern (noch nicht überall gut)");
 
     badgeRow.innerHTML = `
       <span class="pill">${starText}</span>
-      <span class="pill">🥈 Silber-Pokal-Streak (alle ≥10): <b>${silverStreak}</b></span>
-      <span class="pill">🏆 Gold-Pokal-Streak (alle ≥20): <b>${goldStreak}</b></span>
+      <span class="pill">🥈 Silber-Pokal-Streak (alle gut): <b>${silver}</b></span>
+      <span class="pill">🏆 Gold-Pokal-Streak (alle optimal): <b>${gold}</b></span>
+      <span class="pill">💾 Speichert automatisch</span>
     `;
+
+    const countOpt = GROUPS.reduce((acc,g) => acc + (((state.active[g.key]||0) >= TH[g.key].opt) ? 1 : 0), 0);
+    summary.innerHTML = `Optimal erreicht: <b>${countOpt} / ${GROUPS.length}</b> Muskelgruppen (jeweils ≥ 🟢 Ziel)`;
 
     rows.innerHTML = "";
     const scaleMax = maxForScale();
     GROUPS.forEach(g => {
       const v = state.active[g.key] || 0;
       const widthPct = Math.min(100, (v / scaleMax) * 100);
-      const s = per[g.key] || { silver: 0, gold: 0 };
+      const s = per[g.key] || { silver:0, gold:0 };
 
       const row = document.createElement("div");
       row.className = "row";
       row.innerHTML = `
         <div class="label">
           <span class="name"><span style="font-size:18px;">${g.icon}</span>${g.key}</span>
-          <span class="streak-chip" title="Streak je Muskel: Wochen am Stück">
-            🟡<b>${s.silver}</b> 🟢<b>${s.gold}</b>
-          </span>
+          <span class="chip" title="Ziele (Woche)">🟡 <b>${TH[g.key].good}</b> · 🟢 <b>${TH[g.key].opt}</b></span>
+          <span class="chip" title="Streak (Wochen am Stück)">🟡 <b>${s.silver}</b> · 🟢 <b>${s.gold}</b></span>
         </div>
         <div class="bar-wrap">
-          <div class="bar" style="width:${widthPct}%; background:${colorFor(v)}"></div>
-          <div class="bar-text"><span><b>${v}</b> Sätze</span></div>
+          <div class="bar" style="width:${widthPct}%; background:${colorFor(g.key, v)}"></div>
+          <div class="bar-text"><span><b>${v}</b> Sätze · ${statusFor(g.key, v)}</span></div>
         </div>
         <div class="controls">
           <button class="btn-mini" data-action="minus">−</button>
           <button class="btn-mini primary" data-action="plus">+</button>
         </div>
       `;
-      row.querySelector('[data-action="minus"]').onclick = () => { state.active[g.key] = clamp(v - 1, 0, 999); saveState(); render(); };
-      row.querySelector('[data-action="plus"]').onclick = () => { state.active[g.key] = clamp(v + 1, 0, 999); saveState(); render(); };
+
+      row.querySelector('[data-action="minus"]').onclick = () => { state.active[g.key] = clamp(v-1, 0, 999); saveState(); render(); };
+      row.querySelector('[data-action="plus"]').onclick = () => { state.active[g.key] = clamp(v+1, 0, 999); saveState(); render(); };
       rows.appendChild(row);
     });
 
@@ -505,8 +395,8 @@
       keys.forEach(k => {
         const entry = state.archive[k];
         const wb = weekBadges(entry.setsByGroup || {});
-        const star = wb.all20 ? "⭐️" : (wb.all10 ? "🌟" : "•");
-        const trophy = wb.all20 ? "🏆" : (wb.all10 ? "🥈" : "");
+        const star = wb.allOpt ? "⭐️" : (wb.allGood ? "🌟" : "•");
+        const trophy = wb.allOpt ? "🏆" : (wb.allGood ? "🥈" : "");
         const btn = document.createElement("button");
         btn.className = "ghost";
         btn.textContent = `${star}${trophy} ${k}`;
@@ -519,8 +409,7 @@
   document.getElementById("btnResetWeek").onclick = () => {
     if (!confirm("Aktuelle Woche wirklich auf 0 setzen?")) return;
     state.active = emptyWeekSets();
-    saveState();
-    render();
+    saveState(); render();
   };
 
   document.getElementById("btnExport").onclick = async () => {
@@ -528,18 +417,14 @@
     const fileName = `training-bars-export-${state.activeWeekKey}.json`;
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    a.href = url; a.download = fileName;
+    document.body.appendChild(a); a.click(); a.remove();
     URL.revokeObjectURL(url);
   };
 
   document.getElementById("btnImport").onclick = () => {
     const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "application/json";
+    input.type = "file"; input.accept = "application/json";
     input.onchange = async () => {
       const file = input.files && input.files[0];
       if (!file) return;

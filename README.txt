@@ -1,12 +1,14 @@
-Wochentraining – Satz-Tracker (PWA v5)
+Wochentraining – Satz-Tracker (PWA v6)
 
 Neu:
-- Pro Muskelgruppe werden Streaks angezeigt:
-  - 🟡 = Wochen am Stück, in denen diese Muskelgruppe >=10 Sätze hat
-  - 🟢 = Wochen am Stück, in denen diese Muskelgruppe >=20 Sätze hat
-  (>=20 zählt automatisch auch als >=10)
+- Ziele sind pro Muskelgruppe unterschiedlich:
+  - 🟡 gut / 🟢 optimal
+  - Beispiel: Bizeps 🟡 ab 8, 🟢 ab 14
+- Farben & Status pro Muskel nutzen diese Ziele
+- Sterne & globale Streaks:
+  - 🌟 Silber: alle Muskeln >= 🟡 Ziel
+  - ⭐ Gold:   alle Muskeln >= 🟢 Ziel (zählt automatisch auch als Silber)
+- Pro Muskelgruppe: Streaks für 🟡 und 🟢
 
-Weiter drin:
-- Sterne (Silber/Gold) pro Woche
-- Pokal-Streaks (Silber/Gold) global
-- iOS: kein nerviges Zoom bei schnellem Tippen auf +/−
+iOS:
+- kein nerviges Zoom bei schnellem Tippen auf +/−
