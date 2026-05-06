@@ -4,137 +4,353 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0b1020" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Wochentraining – Satz-Tracker</title>
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="apple-touch-icon" href="./icons/icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Wochentraining</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./icons/icon-180.png" />
   <style>
     :root{
       --bg:#0b1020;
       --card:#121a33;
-      --border:rgba(255,255,255,0.08);
-      --muted:rgba(255,255,255,0.75);
-      --btn:rgba(255,255,255,0.08);
+      --card2:#0f172a;
+      --border:rgba(255,255,255,0.09);
+      --muted:rgba(255,255,255,0.70);
+      --barbg:rgba(255,255,255,0.09);
+      --barfill:#475569;
+      --green:#16a34a;
+      --blue:#2563eb;
+      --red:#7f1d1d;
     }
-    *{ box-sizing:border-box; }
+    *{box-sizing:border-box}
     body{
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background:var(--bg);
-      color:#fff;
       margin:0;
-      padding:18px;
-      -webkit-text-size-adjust: 100%;
+      padding:12px;
+      background:var(--bg);
+      color:white;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      -webkit-text-size-adjust:100%;
     }
-    button, .btn-mini, .ghost, .danger, .primary, .pill {
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
+    button{
+      touch-action:manipulation;
+      -webkit-tap-highlight-color:transparent;
+      user-select:none;
+      -webkit-user-select:none;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.07);
+      color:white;
+      border-radius:10px;
+      cursor:pointer;
     }
-    .container{
+    .wrap{
       max-width:980px;
       margin:0 auto;
       background:var(--card);
       border:1px solid var(--border);
-      border-radius:14px;
-      padding:16px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+      border-radius:16px;
+      padding:12px;
+      box-shadow:0 12px 32px rgba(0,0,0,.35);
     }
-    h1{ margin:0; font-size:22px; }
-    .sub{ margin-top:6px; color:var(--muted); }
-    .toprow{ display:flex; gap:12px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; }
-    .pill{
-      display:inline-flex; gap:8px; align-items:center;
-      padding:8px 10px; border:1px solid var(--border);
-      border-radius:999px; background:rgba(255,255,255,0.04);
-      color:#fff; font-size:13px; white-space:nowrap;
+    .top{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+      margin-bottom:10px;
     }
-    .summary{ margin-top:14px; font-size:16px; }
+    h1{
+      margin:0;
+      font-size:20px;
+      line-height:1.1;
+    }
+    .week{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:4px;
+    }
+    .topBtns{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .topBtns button{
+      padding:9px 10px;
+      font-size:13px;
+      white-space:nowrap;
+    }
+    .danger{background:var(--red)}
     .row{
-      display:grid; grid-template-columns:260px 1fr 120px; gap:12px; align-items:center;
-      padding:10px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+      display:grid;
+      grid-template-columns:150px 1fr 132px;
+      gap:10px;
+      align-items:center;
+      padding:8px 0;
+      border-bottom:1px solid rgba(255,255,255,0.06);
     }
-    .label{ font-weight:800; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-    .label .name{ display:flex; align-items:center; gap:8px; }
-    .chip{
-      display:inline-flex; gap:6px; align-items:center; padding:4px 8px;
-      border:1px solid rgba(255,255,255,0.12); border-radius:999px;
-      background:rgba(255,255,255,0.06); font-size:12px; font-weight:800; opacity:0.95;
+    .label{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-weight:800;
+      min-width:0;
     }
-    .chip .muted{ opacity:0.85; font-weight:700; }
-    .bar-wrap{ position:relative; height:34px; background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden; }
-    .bar{ height:100%; border-radius:10px; transition: width 120ms ease; }
-    .bar-text{ position:absolute; inset:0; display:flex; align-items:center; padding-left:10px; gap:10px; font-size:14px; }
-    .controls{ display:flex; gap:10px; justify-content:flex-end; }
-    button{
-      border:1px solid rgba(255,255,255,0.12); background:var(--btn); color:#fff; cursor:pointer;
-      border-radius:10px; padding:10px 12px; user-select:none; -webkit-user-select:none;
+    .goal{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+      margin-left:auto;
+      white-space:nowrap;
     }
-    .btn-mini{ width:52px; height:38px; padding:0; font-size:18px; font-weight:900; display:flex; align-items:center; justify-content:center; }
-    .danger{ background:#7f1d1d; }
-    .primary{ background:#2563eb; }
-    .ghost{ background:rgba(255,255,255,0.06); }
-    .section{ margin-top:18px; }
-    h2{ margin:0 0 10px 0; font-size:18px; }
-    .archive-grid{ display:flex; flex-wrap:wrap; gap:10px; }
-    .small{ font-size:13px; color:var(--muted); }
-    .kpi{ display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
-    .badgeRow{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
-
-    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,0.55); display:none; align-items:center; justify-content:center; padding:16px; z-index:50; }
-    .modal{ width:min(860px, 100%); background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
-    .modal-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
-    .modal table{ width:100%; border-collapse:collapse; margin-top:10px; }
-    .modal th,.modal td{ text-align:left; padding:10px 8px; border-bottom:1px solid rgba(255,255,255,0.07); font-size:14px; }
-
-    @media (max-width: 720px){
-      body{ padding:12px; }
-      .row{ grid-template-columns: 1fr; }
-      .controls{ justify-content:flex-start; }
+    .barBox{
+      position:relative;
+      height:34px;
+      background:var(--barbg);
+      border-radius:10px;
+      overflow:hidden;
+    }
+    .bar{
+      height:100%;
+      width:0;
+      background:var(--barfill);
+      border-radius:10px;
+      transition:width .12s ease, background .12s ease;
+    }
+    .barText{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      padding-left:10px;
+      font-size:14px;
+      font-weight:750;
+      text-shadow:0 1px 2px rgba(0,0,0,.3);
+    }
+    .controls{
+      display:flex;
+      gap:7px;
+      justify-content:flex-end;
+    }
+    .btn{
+      width:38px;
+      height:36px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      font-weight:900;
+      padding:0;
+    }
+    .btnPlus{background:var(--blue)}
+    .btn30{
+      width:46px;
+      font-size:13px;
+      font-weight:850;
+    }
+    .section{
+      margin-top:14px;
+      background:var(--card2);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+    }
+    .section h2{
+      margin:0 0 10px 0;
+      font-size:17px;
+    }
+    .analyticsGrid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+    }
+    .metric{
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.07);
+      border-radius:12px;
+      padding:10px;
+      min-height:82px;
+    }
+    .metricName{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+    .metricValue{
+      font-size:24px;
+      font-weight:900;
+      margin-top:3px;
+    }
+    .metricHint{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:4px;
+      line-height:1.25;
+    }
+    .miniBar{
+      height:8px;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,0.09);
+      margin-top:9px;
+    }
+    .miniFill{
+      height:100%;
+      width:0;
+      background:var(--green);
+      border-radius:999px;
+    }
+    .missing{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:8px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 9px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      font-size:13px;
+      font-weight:750;
+    }
+    .archiveGrid{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .archiveGrid button{
+      padding:8px 10px;
+      font-size:13px;
+      background:rgba(255,255,255,0.06);
+    }
+    .small{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:8px;
+    }
+    .modalBackdrop{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+      z-index:99;
+      background:rgba(0,0,0,0.6);
+    }
+    .modal{
+      width:min(760px,100%);
+      max-height:88vh;
+      overflow:auto;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 20px 60px rgba(0,0,0,.6);
+    }
+    .modalTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+    .modal h2{margin:0;font-size:18px}
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:10px;
+    }
+    th,td{
+      text-align:left;
+      padding:9px 6px;
+      border-bottom:1px solid rgba(255,255,255,0.07);
+      font-size:14px;
+    }
+    @media(max-width:760px){
+      .wrap{padding:10px}
+      .top{align-items:flex-start}
+      .row{
+        grid-template-columns:1fr;
+        gap:7px;
+        padding:9px 0;
+      }
+      .controls{justify-content:flex-start}
+      .analyticsGrid{grid-template-columns:1fr}
+      .topBtns button{padding:8px 9px}
+      .label{width:100%}
+      .goal{margin-left:0}
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="toprow">
+  <div class="wrap">
+    <div class="top">
       <div>
-        <h1>🏋️ Wochentraining – Satz-Tracker</h1>
-        <div class="sub" id="weekLine"></div>
-        <div class="kpi" id="thresholdLegend"></div>
-        <div class="badgeRow" id="badgeRow"></div>
+        <h1>Wochentraining</h1>
+        <div class="week" id="weekLine"></div>
       </div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="ghost" id="btnExport">Export</button>
-        <button class="ghost" id="btnImport">Import</button>
-        <button class="danger" id="btnResetWeek">Woche reset</button>
+      <div class="topBtns">
+        <button id="btnExport">Export</button>
+        <button id="btnImport">Import</button>
+        <button class="danger" id="btnReset">Reset</button>
       </div>
     </div>
 
-    <div class="summary" id="summary"></div>
     <div id="rows"></div>
 
     <div class="section">
-      <h2>Archiv (Kalenderwochen)</h2>
-      <div class="archive-grid" id="archiveGrid"></div>
-      <div class="small" style="margin-top:10px;">
-        Hinweis: Der Wochenwechsel (Mo 00:00) wird beim nächsten Öffnen der App erkannt und die alte Woche automatisch archiviert.
+      <h2>Wochenanalyse</h2>
+      <div class="analyticsGrid">
+        <div class="metric">
+          <div class="metricName">Trainingsqualität</div>
+          <div class="metricValue" id="qualityValue">0%</div>
+          <div class="miniBar"><div class="miniFill" id="qualityFill"></div></div>
+          <div class="metricHint" id="qualityHint"></div>
+        </div>
+        <div class="metric">
+          <div class="metricName">Balance</div>
+          <div class="metricValue" id="balanceValue">0%</div>
+          <div class="miniBar"><div class="miniFill" id="balanceFill"></div></div>
+          <div class="metricHint" id="balanceHint"></div>
+        </div>
+        <div class="metric">
+          <div class="metricName">Trend</div>
+          <div class="metricValue" id="trendValue">—</div>
+          <div class="miniBar"><div class="miniFill" id="trendFill"></div></div>
+          <div class="metricHint" id="trendHint"></div>
+        </div>
       </div>
+
+      <div style="margin-top:12px;">
+        <div class="metricName">Was fehlt noch?</div>
+        <div class="missing" id="missingList"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Archiv</h2>
+      <div class="archiveGrid" id="archiveGrid"></div>
+      <div class="small">Alte Wochen werden beim nächsten Öffnen in einer neuen Kalenderwoche automatisch archiviert.</div>
     </div>
   </div>
 
-  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true">
+  <div class="modalBackdrop" id="modalBackdrop">
     <div class="modal">
-      <div class="modal-head">
+      <div class="modalTop">
         <div>
-          <h2 style="margin:0;" id="modalTitle">Archiv</h2>
+          <h2 id="modalTitle">Archiv</h2>
           <div class="small" id="modalSub"></div>
         </div>
-        <button class="ghost" id="modalClose">Schließen</button>
+        <button id="modalClose">Schließen</button>
       </div>
-      <div class="kpi" id="modalKpis"></div>
+      <div id="modalSummary" class="missing"></div>
       <table>
-        <thead>
-          <tr><th>Muskelgruppe</th><th>Sätze</th><th>Zielwerte</th><th>Status</th><th>Streak</th></tr>
-        </thead>
+        <thead><tr><th>Bereich</th><th>Wert</th><th>Ziel</th><th>Status</th></tr></thead>
         <tbody id="modalBody"></tbody>
       </table>
     </div>
@@ -143,16 +359,24 @@
 <script>
   (function(){
     let lastTouchEnd = 0;
-    document.addEventListener('touchend', function (event) {
+    document.addEventListener("touchend", function(event){
       const now = Date.now();
       if (now - lastTouchEnd <= 300) event.preventDefault();
       lastTouchEnd = now;
-    }, { passive: false });
+    }, { passive:false });
   })();
 
-  const GROUPS = [{"key": "Brust", "icon": "🫀"}, {"key": "Trizeps", "icon": "🦾"}, {"key": "Rücken", "icon": "🛡️"}, {"key": "Bizeps", "icon": "💪"}, {"key": "Beine", "icon": "🦵"}, {"key": "Bauch", "icon": "🎯"}, {"key": "Schultern", "icon": "🏋️"}];
-  const TH = {"Brust": {"good": 10, "opt": 18}, "Trizeps": {"good": 10, "opt": 18}, "Rücken": {"good": 12, "opt": 20}, "Bizeps": {"good": 8, "opt": 14}, "Beine": {"good": 12, "opt": 22}, "Bauch": {"good": 6, "opt": 12}, "Schultern": {"good": 10, "opt": 18}};
-  const STORAGE_KEY = "training-bars.pwa.v6";
+  const GROUPS = [{"key": "Brust", "icon": "🫀", "target": 10}, {"key": "Trizeps", "icon": "🦾", "target": 10}, {"key": "Rücken", "icon": "🛡️", "target": 12}, {"key": "Bizeps", "icon": "💪", "target": 8}, {"key": "Beine", "icon": "🦵", "target": 12}, {"key": "Bauch", "icon": "🎯", "target": 6}, {"key": "Schultern", "icon": "🏋️", "target": 10}];
+  const CARDIO_TARGET = 60;
+  const STORAGE_KEY = "training-bars.simple.v7";
+  const OLD_KEYS = [
+    "training-bars.pwa.v6",
+    "training-bars.pwa.v5",
+    "training-bars.pwa.v4",
+    "training-bars.pwa.v3",
+    "training-bars.pwa.v2",
+    "training-bars-simple"
+  ];
 
   function getISOWeekKey(date = new Date()) {
     const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -160,298 +384,327 @@
     d.setUTCDate(d.getUTCDate() + 4 - dayNum);
     const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
     const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-    const yyyy = d.getUTCFullYear();
-    const ww = String(weekNo).padStart(2, "0");
-    return `${yyyy}-W${ww}`;
+    return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
   }
 
-  function emptyWeekSets(){
+  function emptySets(){
     const obj = {};
     GROUPS.forEach(g => obj[g.key] = 0);
     return obj;
   }
 
-  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
-
-  function colorFor(groupKey, v){
-    const good = TH[groupKey].good;
-    const opt  = TH[groupKey].opt;
-    if (v >= opt) return "#16a34a";
-    if (v >= good) return "#eab308";
-    return "#dc2626";
+  function freshState(){
+    return { activeWeekKey:getISOWeekKey(), active:emptySets(), cardioMinutes:0, archive:{} };
   }
 
-  function statusFor(groupKey, v){
-    const good = TH[groupKey].good;
-    const opt  = TH[groupKey].opt;
-    if (v >= opt) return "🟢 optimal";
-    if (v >= good) return "🟡 gut";
-    return "🔴 zu wenig";
-  }
-
-  function weekBadges(sets){
-    const allGood = GROUPS.every(g => (sets?.[g.key] ?? 0) >= TH[g.key].good);
-    const allOpt  = GROUPS.every(g => (sets?.[g.key] ?? 0) >= TH[g.key].opt);
-    return { allGood, allOpt };
-  }
-
-  function loadState(){
-    const currentWeekKey = getISOWeekKey();
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const fresh = { activeWeekKey: currentWeekKey, active: emptyWeekSets(), archive: {} };
-
-    if (!raw) return fresh;
-    let st;
-    try { st = JSON.parse(raw); } catch { return fresh; }
-
+  function normalizeState(st){
+    const f = freshState();
+    st = st || f;
+    st.activeWeekKey = st.activeWeekKey || f.activeWeekKey;
+    st.active = st.active || emptySets();
     st.archive = st.archive || {};
-    st.active = st.active || emptyWeekSets();
+    if (typeof st.cardioMinutes !== "number") st.cardioMinutes = 0;
     GROUPS.forEach(g => { if (st.active[g.key] == null) st.active[g.key] = 0; });
 
-    if (st.activeWeekKey !== currentWeekKey) {
-      const hasAny = Object.values(st.active).some(v => v > 0);
-      if (hasAny) st.archive[st.activeWeekKey] = { setsByGroup: st.active, archivedAt: new Date().toISOString() };
-      st.activeWeekKey = currentWeekKey;
-      st.active = emptyWeekSets();
-    }
+    Object.keys(st.archive).forEach(k => {
+      const e = st.archive[k] || {};
+      e.setsByGroup = e.setsByGroup || {};
+      GROUPS.forEach(g => { if (e.setsByGroup[g.key] == null) e.setsByGroup[g.key] = 0; });
+      if (typeof e.cardioMinutes !== "number") e.cardioMinutes = 0;
+      if (!e.archivedAt) e.archivedAt = new Date().toISOString();
+      st.archive[k] = e;
+    });
+
     return st;
   }
 
-  function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  function loadState(){
+    let raw = localStorage.getItem(STORAGE_KEY);
+
+    if (!raw) {
+      for (const key of OLD_KEYS) {
+        raw = localStorage.getItem(key);
+        if (raw) break;
+      }
+    }
+
+    let st = freshState();
+    if (raw) {
+      try { st = JSON.parse(raw); } catch(e) { st = freshState(); }
+    }
+    st = normalizeState(st);
+
+    const current = getISOWeekKey();
+    if (st.activeWeekKey !== current) {
+      const hasAnySets = Object.values(st.active || {}).some(v => v > 0);
+      const hasCardio = (st.cardioMinutes || 0) > 0;
+      if (hasAnySets || hasCardio) {
+        st.archive[st.activeWeekKey] = {
+          setsByGroup: st.active,
+          cardioMinutes: st.cardioMinutes || 0,
+          archivedAt: new Date().toISOString()
+        };
+      }
+      st.activeWeekKey = current;
+      st.active = emptySets();
+      st.cardioMinutes = 0;
+    }
+
+    return normalizeState(st);
+  }
 
   let state = loadState();
-  saveState();
+  save();
 
-  const weekLine = document.getElementById("weekLine");
-  const summary = document.getElementById("summary");
-  const rows = document.getElementById("rows");
-  const archiveGrid = document.getElementById("archiveGrid");
-  const badgeRow = document.getElementById("badgeRow");
-  const thresholdLegend = document.getElementById("thresholdLegend");
-
-  const modalBackdrop = document.getElementById("modalBackdrop");
-  const modalTitle = document.getElementById("modalTitle");
-  const modalSub = document.getElementById("modalSub");
-  const modalBody = document.getElementById("modalBody");
-  const modalKpis = document.getElementById("modalKpis");
-  document.getElementById("modalClose").onclick = () => closeModal();
-  modalBackdrop.addEventListener("click", (e) => { if (e.target === modalBackdrop) closeModal(); });
-  function closeModal(){ modalBackdrop.style.display = "none"; }
-
-  function maxForScale(){
-    const maxVal = Math.max(...GROUPS.map(g => state.active[g.key] || 0), ...GROUPS.map(g => TH[g.key].opt));
-    return Math.max(10, Math.ceil(maxVal/5)*5);
+  function save(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
 
-  function computeGlobalStreaks(){
-    const entries = [];
-    Object.keys(state.archive || {}).sort().forEach(k => entries.push({ weekKey:k, sets:(state.archive[k]?.setsByGroup || {}) }));
-    entries.push({ weekKey: state.activeWeekKey, sets: state.active });
+  function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
 
-    let silver = 0;
-    for (let i = entries.length - 1; i >= 0; i--) {
-      if (weekBadges(entries[i].sets).allGood) silver++; else break;
-    }
-    let gold = 0;
-    for (let i = entries.length - 1; i >= 0; i--) {
-      if (weekBadges(entries[i].sets).allOpt) gold++; else break;
-    }
-    return { silver, gold };
+  function muscleCompletion(sets, group){
+    return clamp((sets[group.key] || 0) / group.target, 0, 1);
   }
 
-  function computePerMuscleStreaks(){
-    const entries = [];
-    Object.keys(state.archive || {}).sort().forEach(k => entries.push({ weekKey:k, sets:(state.archive[k]?.setsByGroup || {}) }));
-    entries.push({ weekKey: state.activeWeekKey, sets: state.active });
-
-    const result = {};
-    GROUPS.forEach(g => {
-      const good = TH[g.key].good;
-      const opt  = TH[g.key].opt;
-
-      let s = 0;
-      for (let i = entries.length - 1; i >= 0; i--) {
-        const v = (entries[i].sets?.[g.key] ?? 0);
-        if (v >= good) s++; else break;
-      }
-      let gg = 0;
-      for (let i = entries.length - 1; i >= 0; i--) {
-        const v = (entries[i].sets?.[g.key] ?? 0);
-        if (v >= opt) gg++; else break;
-      }
-      result[g.key] = { silver:s, gold:gg };
-    });
-    return result;
+  function cardioCompletion(cardioMinutes){
+    return clamp((cardioMinutes || 0) / CARDIO_TARGET, 0, 1);
   }
 
-  function openModalForWeek(weekKey, entry){
-    modalTitle.textContent = `Archiv: ${weekKey}`;
-    modalSub.textContent = `archiviert am: ${new Date(entry.archivedAt).toLocaleString()}`;
-
-    const sets = entry.setsByGroup || {};
-    const b = weekBadges(sets);
-    const totalSets = GROUPS.reduce((acc,g) => acc + (sets[g.key]||0), 0);
-
-    const star = b.allOpt ? "⭐️ Goldstern" : (b.allGood ? "🌟 Silberstern" : "—");
-    const trophy = b.allOpt ? "🏆 Gold-Pokal" : (b.allGood ? "🥈 Silber-Pokal" : "—");
-
-    modalKpis.innerHTML = `
-      <span class="pill">📦 Gesamtsätze: <b>${totalSets}</b></span>
-      <span class="pill">${star}</span>
-      <span class="pill">${trophy}</span>
-    `;
-
-    // timeline up to this week
-    const timeline = [];
-    Object.keys(state.archive || {}).sort().forEach(k => timeline.push({ weekKey:k, sets:(state.archive[k]?.setsByGroup || {}) }));
-    const idx = timeline.findIndex(x => x.weekKey === weekKey);
-    const upto = idx >= 0 ? timeline.slice(0, idx+1) : timeline;
-
-    const per = {};
-    GROUPS.forEach(g => {
-      const good = TH[g.key].good;
-      const opt  = TH[g.key].opt;
-      let s = 0; for (let i = upto.length - 1; i >= 0; i--) { const v = (upto[i].sets?.[g.key] ?? 0); if (v >= good) s++; else break; }
-      let gg = 0; for (let i = upto.length - 1; i >= 0; i--) { const v = (upto[i].sets?.[g.key] ?? 0); if (v >= opt) gg++; else break; }
-      per[g.key] = { silver:s, gold:gg };
-    });
-
-    modalBody.innerHTML = "";
-    GROUPS.forEach(g => {
-      const v = sets[g.key] || 0;
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${g.icon} ${g.key}</td>
-        <td><b>${v}</b></td>
-        <td><span class="chip"><span class="muted">🟡</span> ${TH[g.key].good} <span class="muted">🟢</span> ${TH[g.key].opt}</span></td>
-        <td>${statusFor(g.key, v)}</td>
-        <td><span class="chip">🟡 <b>${per[g.key].silver}</b> · 🟢 <b>${per[g.key].gold}</b></span></td>
-      `;
-      modalBody.appendChild(tr);
-    });
-
-    modalBackdrop.style.display = "flex";
+  function weekScore(entry){
+    const sets = entry.setsByGroup || entry.active || {};
+    const cardio = entry.cardioMinutes || 0;
+    const avgStrength = GROUPS.reduce((acc,g) => acc + muscleCompletion(sets, g), 0) / GROUPS.length;
+    const lowestStrength = Math.min(...GROUPS.map(g => muscleCompletion(sets, g)));
+    const cardioScore = cardioCompletion(cardio);
+    return Math.round((avgStrength * 0.70 + lowestStrength * 0.20 + cardioScore * 0.10) * 100);
   }
 
-  function render(){
-    weekLine.textContent = `Aktive Woche: ${state.activeWeekKey} (Mo–So, ISO-KW)`;
+  function getPrevArchivedEntry(){
+    const keys = Object.keys(state.archive || {}).sort().reverse();
+    if (keys.length === 0) return null;
+    return state.archive[keys[0]];
+  }
 
-    thresholdLegend.innerHTML = `<span class="pill">Ziele je Muskel: <b>🟡 gut</b> / <b>🟢 optimal</b></span>`
-      + GROUPS.map(g => `<span class="pill">${g.key}: 🟡 <b>${TH[g.key].good}</b> / 🟢 <b>${TH[g.key].opt}</b></span>`).join("");
+  function barColor(done){ return done ? "#16a34a" : "#475569"; }
 
-    const b = weekBadges(state.active);
-    const { silver, gold } = computeGlobalStreaks();
-    const per = computePerMuscleStreaks();
-
-    const starText = b.allOpt
-      ? "⭐️ Goldstern (alle optimal, zählt auch als Silber)"
-      : (b.allGood ? "🌟 Silberstern (alle gut)" : "— Kein Stern (noch nicht überall gut)");
-
-    badgeRow.innerHTML = `
-      <span class="pill">${starText}</span>
-      <span class="pill">🥈 Silber-Pokal-Streak (alle gut): <b>${silver}</b></span>
-      <span class="pill">🏆 Gold-Pokal-Streak (alle optimal): <b>${gold}</b></span>
-      <span class="pill">💾 Speichert automatisch</span>
-    `;
-
-    const countOpt = GROUPS.reduce((acc,g) => acc + (((state.active[g.key]||0) >= TH[g.key].opt) ? 1 : 0), 0);
-    summary.innerHTML = `Optimal erreicht: <b>${countOpt} / ${GROUPS.length}</b> Muskelgruppen (jeweils ≥ 🟢 Ziel)`;
-
+  function renderRows(){
+    const rows = document.getElementById("rows");
     rows.innerHTML = "";
-    const scaleMax = maxForScale();
-    GROUPS.forEach(g => {
-      const v = state.active[g.key] || 0;
-      const widthPct = Math.min(100, (v / scaleMax) * 100);
-      const s = per[g.key] || { silver:0, gold:0 };
+
+    GROUPS.forEach(group => {
+      const value = state.active[group.key] || 0;
+      const done = value >= group.target;
+      const width = Math.min(100, Math.round((value / group.target) * 100));
 
       const row = document.createElement("div");
       row.className = "row";
       row.innerHTML = `
         <div class="label">
-          <span class="name"><span style="font-size:18px;">${g.icon}</span>${g.key}</span>
-          <span class="chip" title="Ziele (Woche)">🟡 <b>${TH[g.key].good}</b> · 🟢 <b>${TH[g.key].opt}</b></span>
-          <span class="chip" title="Streak (Wochen am Stück)">🟡 <b>${s.silver}</b> · 🟢 <b>${s.gold}</b></span>
+          <span>${group.icon}</span>
+          <span>${group.key}</span>
+          <span class="goal">Ziel ${group.target}</span>
         </div>
-        <div class="bar-wrap">
-          <div class="bar" style="width:${widthPct}%; background:${colorFor(g.key, v)}"></div>
-          <div class="bar-text"><span><b>${v}</b> Sätze · ${statusFor(g.key, v)}</span></div>
+        <div class="barBox">
+          <div class="bar" style="width:${width}%; background:${barColor(done)}"></div>
+          <div class="barText">${value} / ${group.target} Sätze ${done ? "✓" : ""}</div>
         </div>
         <div class="controls">
-          <button class="btn-mini" data-action="minus">−</button>
-          <button class="btn-mini primary" data-action="plus">+</button>
+          <button class="btn" data-action="minus">−</button>
+          <button class="btn btnPlus" data-action="plus">+</button>
         </div>
       `;
-
-      row.querySelector('[data-action="minus"]').onclick = () => { state.active[g.key] = clamp(v-1, 0, 999); saveState(); render(); };
-      row.querySelector('[data-action="plus"]').onclick = () => { state.active[g.key] = clamp(v+1, 0, 999); saveState(); render(); };
+      row.querySelector('[data-action="minus"]').onclick = () => {
+        state.active[group.key] = clamp(value - 1, 0, 999);
+        save(); render();
+      };
+      row.querySelector('[data-action="plus"]').onclick = () => {
+        state.active[group.key] = clamp(value + 1, 0, 999);
+        save(); render();
+      };
       rows.appendChild(row);
     });
 
-    const keys = Object.keys(state.archive || {}).sort().reverse();
-    archiveGrid.innerHTML = "";
-    if (keys.length === 0) {
-      archiveGrid.innerHTML = `<span class="small">Noch keine archivierten Wochen.</span>`;
+    const cardio = state.cardioMinutes || 0;
+    const cardioDone = cardio >= CARDIO_TARGET;
+    const cardioWidth = Math.min(100, Math.round((cardio / CARDIO_TARGET) * 100));
+
+    const c = document.createElement("div");
+    c.className = "row";
+    c.innerHTML = `
+      <div class="label">
+        <span>🚣</span>
+        <span>Cardio</span>
+        <span class="goal">Ziel 60 min</span>
+      </div>
+      <div class="barBox">
+        <div class="bar" style="width:${cardioWidth}%; background:${barColor(cardioDone)}"></div>
+        <div class="barText">${cardio} / ${CARDIO_TARGET} min ${cardioDone ? "✓" : ""}</div>
+      </div>
+      <div class="controls">
+        <button class="btn" data-action="minus">−5</button>
+        <button class="btn btnPlus" data-action="plus">+5</button>
+        <button class="btn btnPlus btn30" data-action="session">+30</button>
+      </div>
+    `;
+    c.querySelector('[data-action="minus"]').onclick = () => {
+      state.cardioMinutes = clamp(cardio - 5, 0, 999);
+      save(); render();
+    };
+    c.querySelector('[data-action="plus"]').onclick = () => {
+      state.cardioMinutes = clamp(cardio + 5, 0, 999);
+      save(); render();
+    };
+    c.querySelector('[data-action="session"]').onclick = () => {
+      state.cardioMinutes = clamp(cardio + 30, 0, 999);
+      save(); render();
+    };
+    rows.appendChild(c);
+  }
+
+  function renderAnalytics(){
+    const activeEntry = { setsByGroup: state.active, cardioMinutes: state.cardioMinutes };
+    const score = weekScore(activeEntry);
+    const avgStrength = Math.round((GROUPS.reduce((acc,g) => acc + muscleCompletion(state.active, g), 0) / GROUPS.length) * 100);
+    const balance = Math.round(Math.min(...GROUPS.map(g => muscleCompletion(state.active, g))) * 100);
+    const prev = getPrevArchivedEntry();
+    const prevScore = prev ? weekScore(prev) : null;
+    const trend = prevScore == null ? null : score - prevScore;
+
+    document.getElementById("qualityValue").textContent = score + "%";
+    document.getElementById("qualityFill").style.width = score + "%";
+    document.getElementById("qualityHint").textContent =
+      score >= 90 ? "Sehr starke Woche." :
+      score >= 75 ? "Gute Woche, fast alles abgedeckt." :
+      score >= 50 ? "Solide Basis, aber noch Lücken." :
+      "Noch früh in der Woche oder zu wenig Volumen.";
+
+    document.getElementById("balanceValue").textContent = balance + "%";
+    document.getElementById("balanceFill").style.width = balance + "%";
+    document.getElementById("balanceHint").textContent =
+      balance >= 100 ? "Alle Muskelziele erreicht." :
+      balance >= 70 ? "Relativ ausgewogen." :
+      "Mindestens eine Muskelgruppe hängt deutlich zurück.";
+
+    document.getElementById("trendValue").textContent = trend == null ? "—" : (trend > 0 ? "+" + trend : trend) + "%";
+    document.getElementById("trendFill").style.width = (trend == null ? 0 : clamp(50 + trend, 0, 100)) + "%";
+    document.getElementById("trendHint").textContent =
+      trend == null ? "Noch keine Vorwoche im Archiv." :
+      trend > 5 ? "Besser als letzte Woche." :
+      trend < -5 ? "Schwächer als letzte Woche." :
+      "Etwa wie letzte Woche.";
+
+    const missing = [];
+    GROUPS.forEach(g => {
+      const left = Math.max(0, g.target - (state.active[g.key] || 0));
+      if (left > 0) missing.push({ label:g.icon + " " + g.key, left, unit:"Sätze" });
+    });
+    const cardioLeft = Math.max(0, CARDIO_TARGET - (state.cardioMinutes || 0));
+    if (cardioLeft > 0) missing.push({ label:"🚣 Cardio", left:cardioLeft, unit:"min" });
+
+    missing.sort((a,b) => b.left - a.left);
+    const box = document.getElementById("missingList");
+    if (missing.length === 0) {
+      box.innerHTML = `<span class="pill">Alles erledigt ✓</span>`;
     } else {
-      keys.forEach(k => {
-        const entry = state.archive[k];
-        const wb = weekBadges(entry.setsByGroup || {});
-        const star = wb.allOpt ? "⭐️" : (wb.allGood ? "🌟" : "•");
-        const trophy = wb.allOpt ? "🏆" : (wb.allGood ? "🥈" : "");
-        const btn = document.createElement("button");
-        btn.className = "ghost";
-        btn.textContent = `${star}${trophy} ${k}`;
-        btn.onclick = () => openModalForWeek(k, entry);
-        archiveGrid.appendChild(btn);
-      });
+      box.innerHTML = missing.slice(0, 5).map(x => `<span class="pill">${x.label}: noch <b>${x.left}</b> ${x.unit}</span>`).join("");
     }
   }
 
-  document.getElementById("btnResetWeek").onclick = () => {
-    if (!confirm("Aktuelle Woche wirklich auf 0 setzen?")) return;
-    state.active = emptyWeekSets();
-    saveState(); render();
+  function renderArchive(){
+    const grid = document.getElementById("archiveGrid");
+    const keys = Object.keys(state.archive || {}).sort().reverse();
+    grid.innerHTML = "";
+    if (keys.length === 0) {
+      grid.innerHTML = `<span class="small">Noch keine archivierten Wochen.</span>`;
+      return;
+    }
+    keys.forEach(k => {
+      const entry = state.archive[k];
+      const score = weekScore(entry);
+      const btn = document.createElement("button");
+      btn.textContent = `${k} · ${score}%`;
+      btn.onclick = () => openArchive(k, entry);
+      grid.appendChild(btn);
+    });
+  }
+
+  function openArchive(key, entry){
+    document.getElementById("modalTitle").textContent = key;
+    document.getElementById("modalSub").textContent = "Wochenqualität: " + weekScore(entry) + "%";
+    const summary = document.getElementById("modalSummary");
+    const cardio = entry.cardioMinutes || 0;
+    summary.innerHTML = `<span class="pill">🚣 Cardio: ${cardio}/${CARDIO_TARGET} min</span>`;
+
+    const body = document.getElementById("modalBody");
+    const sets = entry.setsByGroup || {};
+    body.innerHTML = "";
+
+    GROUPS.forEach(g => {
+      const val = sets[g.key] || 0;
+      const done = val >= g.target;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${g.icon} ${g.key}</td><td><b>${val}</b></td><td>${g.target}</td><td>${done ? "grün ✓" : "offen"}</td>`;
+      body.appendChild(tr);
+    });
+
+    const cardioTr = document.createElement("tr");
+    cardioTr.innerHTML = `<td>🚣 Cardio</td><td><b>${cardio} min</b></td><td>${CARDIO_TARGET} min</td><td>${cardio >= CARDIO_TARGET ? "grün ✓" : "offen"}</td>`;
+    body.appendChild(cardioTr);
+
+    document.getElementById("modalBackdrop").style.display = "flex";
+  }
+
+  function render(){
+    document.getElementById("weekLine").textContent = "Aktive Woche: " + state.activeWeekKey;
+    renderRows();
+    renderAnalytics();
+    renderArchive();
+  }
+
+  document.getElementById("btnReset").onclick = () => {
+    if (!confirm("Aktuelle Woche wirklich zurücksetzen?")) return;
+    state.active = emptySets();
+    state.cardioMinutes = 0;
+    save(); render();
   };
 
-  document.getElementById("btnExport").onclick = async () => {
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-    const fileName = `training-bars-export-${state.activeWeekKey}.json`;
+  document.getElementById("btnExport").onclick = () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url; a.download = fileName;
-    document.body.appendChild(a); a.click(); a.remove();
+    a.href = url;
+    a.download = "training-export-" + state.activeWeekKey + ".json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
     URL.revokeObjectURL(url);
   };
 
   document.getElementById("btnImport").onclick = () => {
     const input = document.createElement("input");
-    input.type = "file"; input.accept = "application/json";
+    input.type = "file";
+    input.accept = "application/json";
     input.onchange = async () => {
       const file = input.files && input.files[0];
       if (!file) return;
-      const text = await file.text();
       try {
-        const imported = JSON.parse(text);
-        if (!imported || typeof imported !== "object") throw new Error("Invalid");
-        state.archive = imported.archive || state.archive || {};
-        if (imported.activeWeekKey) state.activeWeekKey = imported.activeWeekKey;
-        if (imported.active) state.active = imported.active;
-        GROUPS.forEach(g => { if (state.active[g.key] == null) state.active[g.key] = 0; });
-
-        const currentWeekKey = getISOWeekKey();
-        if (state.activeWeekKey !== currentWeekKey) {
-          const hasAny = Object.values(state.active).some(v => v > 0);
-          if (hasAny) state.archive[state.activeWeekKey] = { setsByGroup: state.active, archivedAt: new Date().toISOString() };
-          state.activeWeekKey = currentWeekKey;
-          state.active = emptyWeekSets();
-        }
-        saveState(); render();
+        const imported = JSON.parse(await file.text());
+        state = normalizeState(imported);
+        save(); render();
         alert("Import OK.");
-      } catch (e) {
-        alert("Import fehlgeschlagen. (Bitte eine gültige Export-Datei wählen.)");
+      } catch(e) {
+        alert("Import fehlgeschlagen.");
       }
     };
     input.click();
   };
+
+  document.getElementById("modalClose").onclick = () => {
+    document.getElementById("modalBackdrop").style.display = "none";
+  };
+  document.getElementById("modalBackdrop").addEventListener("click", (e) => {
+    if (e.target.id === "modalBackdrop") document.getElementById("modalBackdrop").style.display = "none";
+  });
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {

@@ -1,14 +1,24 @@
-Wochentraining – Satz-Tracker (PWA v6)
+Wochentraining – Satz-Tracker (Simple v7)
 
 Neu:
-- Ziele sind pro Muskelgruppe unterschiedlich:
-  - 🟡 gut / 🟢 optimal
-  - Beispiel: Bizeps 🟡 ab 8, 🟢 ab 14
-- Farben & Status pro Muskel nutzen diese Ziele
-- Sterne & globale Streaks:
-  - 🌟 Silber: alle Muskeln >= 🟡 Ziel
-  - ⭐ Gold:   alle Muskeln >= 🟢 Ziel (zählt automatisch auch als Silber)
-- Pro Muskelgruppe: Streaks für 🟡 und 🟢
+- Nur noch ein Ziel pro Bereich: Sobald das Ziel erreicht ist, wird der Balken grün.
+- Keine gelben Schwellen, keine Sterne/Streaks.
+- Ziele sind bewusst "sehr guter Effekt bei vernünftigem Aufwand", nicht Maximalvolumen:
+  Brust 10
+  Trizeps 10
+  Rücken 12
+  Bizeps 8
+  Beine 12
+  Bauch 6
+  Schultern 10
+- Cardio-Tracking: Ziel 60 Minuten/Woche (= 2 x 30 Minuten)
+- Wochenanalyse:
+  Trainingsqualität, Balance, Trend zur Vorwoche, fehlende Bereiche.
+- iPhone: schnelles Tippen auf +/− soll nicht zoomen.
 
-iOS:
-- kein nerviges Zoom bei schnellem Tippen auf +/−
+GitHub Pages:
+- ZIP entpacken.
+- Dateien in dein Repository hochladen/überschreiben:
+  index.html, sw.js, manifest.webmanifest, icons/
+- Commit.
+- Falls auf dem iPhone noch die alte Version erscheint: Safari/Website-Daten bzw. Home-Screen-App einmal neu laden/entfernen und neu hinzufügen.
